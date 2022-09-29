@@ -9,6 +9,7 @@
   --on-background: #FFFFFF;
   --on-background-grey: #c7c7c7;
   --on-surface: #FFFFFF;
+  --button-color-add: #31B0D5;
 }
 
 [data-theme="light"] {
@@ -55,6 +56,7 @@ header h1 {
 
 header .navigation ul li {
   display: inline-block;
+  text-decoration: none;
   font-size: 24px;
   margin: 0 8px;
 }
@@ -66,25 +68,7 @@ main {
   max-width: 1200px;
 }
 
-.notes-list {
-  margin-top: 32px;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  padding: 16px 8px;
-}
-
-.notes-list-empty {
-  margin-top: 32px;
-  padding: 16px 8px;
-}
-
-.notes-list-empty p {
-  text-align: center;
-  color: var(--on-background-grey);
-}
 .note-item {
-  padding: 16px;
   border-radius: 8px;
   border: 1px solid var(--on-background);
   border-top: 5px solid;
@@ -111,7 +95,7 @@ main {
 
 .detail-page {
   margin: 0 auto;
-  margin-top: 32px; 
+  margin-top: 32px;
   width: 90%;
 }
 
@@ -131,7 +115,9 @@ main {
   font-size: 18px;
 }
 
-.detail-page__action, .homepage__action, .add-new-page__action {
+.detail-page__action,
+.homepage__action,
+.add-new-page__action {
   position: fixed;
   display: flex;
   gap: 16px;
@@ -143,13 +129,13 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 24px;
   border: 0;
   width: 50px;
   height: 50px;
   border-radius: 50px;
-  background-color: var(--on-background);
-  color: var(--background);
+  background-color: var(--button-color-add);
+  color: var(--on-surface);
   padding: 8px;
   cursor: pointer;
 }
@@ -189,7 +175,7 @@ main {
   color: var(--on-background-grey)
 }
 
-.search-bar input {
+.search-bar {
   margin: 16px 0;
   font-family: 'Inter', sans-serif;
   background-color: transparent;
@@ -200,11 +186,12 @@ main {
   color: var(--on-background);
 }
 
-.search-bar input::placeholder {
+.search-bar::placeholder {
   color: var(--on-background-grey);
 }
 
-.toggle-theme, .toggle-locale {
+.toggle-theme,
+.toggle-locale {
   background-color: transparent;
   border: 0;
   cursor: pointer;
@@ -222,16 +209,19 @@ main {
   font-size: 28px;
 }
 
-.input-login, .input-register {
+.input-login,
+.input-register {
   margin: 32px 0;
 }
 
-.input-login label, .input-register label {
+.input-login label,
+.input-register label {
   font-size: 24px;
   font-weight: lighter;
 }
 
-.input-login input, .input-register input {
+.input-login input,
+.input-register input {
   font-size: 18px;
   font-family: 'Inter', sans-serif;
   margin-top: 8px;
@@ -245,7 +235,8 @@ main {
   color: var(--on-background)
 }
 
-.input-login button, .input-register button {
+.input-login button,
+.input-register button {
   font-family: 'Inter', sans-serif;
   font-weight: bold;
   font-size: 24px;
@@ -269,12 +260,115 @@ main {
   color: var(--on-background);
 }
 
+
+.notes-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(min-content, max-content);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.notes-list__empty-message {
+  text-align: center;
+  color: #aaa;
+}
+
+.note-item {
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.note-item__content {
+  padding: 12px;
+  flex: 1;
+}
+
+.note-item__title {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-bottom: 4px;
+}
+
+.note-item__date {
+  font-size: 12px;
+  margin-bottom: 8px;
+  color: #aaa;
+}
+
+.note-item__body {
+  font-size: 14px;
+}
+
+.note-item__action {
+  display: flex;
+}
+
+.note-item__delete-button,
+.note-item__archive-button,
+.note-item__detail-button {
+  display: block;
+  width: 100%;
+  background-color: transparent;
+  border: 0;
+  border-top: 1px solid #aaa;
+  padding: 8px 0;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.note-item__add-button, .note-item__submit-button {
+  background-color: #31B0D5;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  border-radius: 50%;
+  border: 0;
+  height: 50px;
+  width: 50px;
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  z-index: 99;
+  cursor: pointer;
+}
+
+.note-item__delete-button {
+  color: #ff5f52;
+}
+
+.note-item__archive-button {
+  border-right: 1px solid #aaa;
+  color: #fff263;
+}
+
+.note-item__detail-button {
+  border-right: 1px solid #aaa;
+  color: #0f81de;
+}
+
+.note-item__archive-button:hover {
+  color: #c49000;
+}
+
+.note-item__delete-button:hover {
+  color: #b00020;
+}
+
+.note-item__detail-button:hover {
+  color: #0b65af;
+}
+
 @media screen and (min-width: 650px) {
   .notes-list {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .detail-page__title { 
+  .detail-page__title {
     font-size: 64px;
   }
 }
