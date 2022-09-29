@@ -40,7 +40,7 @@ class DetailPage extends React.Component {
     }
 
     render() {
-        if (this.state.note === null) {
+        if (this.state.note === undefined) {
             return <p>Note is not found!</p>;
         }
 

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 function ArchiveButton({ id, onArchive, archived }) {
     return (
-        <React.Fragment>
+        <>
             {archived === false && (
                 <button
                     className="note-item__archive-button"
@@ -22,7 +22,7 @@ function ArchiveButton({ id, onArchive, archived }) {
                     <FaArrowCircleUp />
                 </button>
             )}
-        </React.Fragment>
+        </>
     );
 }
 
