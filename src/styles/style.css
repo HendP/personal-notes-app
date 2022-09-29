@@ -321,7 +321,8 @@ main {
   cursor: pointer;
 }
 
-.note-item__add-button, .note-item__submit-button {
+.note-item__add-button,
+.note-item__submit-button {
   background-color: #31B0D5;
   font-size: 24px;
   font-weight: bold;
@@ -361,6 +362,10 @@ main {
 
 .note-item__detail-button:hover {
   color: #0b65af;
+}
+
+.page-not-found h2, p{
+  text-align: center;
 }
 
 @media screen and (min-width: 650px) {
