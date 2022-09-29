@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-function SearchNote({ query, onSearch }) {
+function SearchNote({ keyword, onSearch }) {
     return (
         <input
             type="search"
@@ -8,10 +9,15 @@ function SearchNote({ query, onSearch }) {
             id="search-bar"
             className="search-bar"
             placeholder="Quick Search by Title"
-            value={query}
+            value={keyword}
             onChange={(e) => onSearch(e.target.value)}
         />
     );
 }
+
+SearchNote.propTypes = {
+    keyword: PropTypes.string.isRequired,
+    onSearch: PropTypes.func.isRequired,
+};
 
 export default SearchNote;

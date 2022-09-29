@@ -4,12 +4,13 @@ import ArchiveButton from './ArchiveButton';
 import { showFormattedDate } from '../utils';
 import DetailButton from './DetailButton';
 import parser from 'html-react-parser';
+import PropTypes from 'prop-types';
 
 function NoteItem({
+    id,
     title,
     body,
     createdAt,
-    id,
     onDelete,
     onArchive,
     archived,
@@ -35,5 +36,15 @@ function NoteItem({
         </div>
     );
 }
+
+NoteItem.propTypes = {
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    body: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onArchive: PropTypes.func.isRequired,
+    archived: PropTypes.bool.isRequired,
+};
 
 export default NoteItem;

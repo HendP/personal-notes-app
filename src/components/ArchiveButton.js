@@ -1,5 +1,6 @@
 import React from 'react';
-import {FaArchive, FaArrowCircleUp } from 'react-icons/fa';
+import { FaArchive, FaArrowCircleUp } from 'react-icons/fa';
+import PropTypes from 'prop-types';
 
 function ArchiveButton({ id, onArchive, archived }) {
     return (
@@ -9,7 +10,7 @@ function ArchiveButton({ id, onArchive, archived }) {
                     className="note-item__archive-button"
                     onClick={() => onArchive(id)}
                 >
-                    <FaArchive/>
+                    <FaArchive />
                 </button>
             )}
 
@@ -18,11 +19,17 @@ function ArchiveButton({ id, onArchive, archived }) {
                     className="note-item__archive-button"
                     onClick={() => onArchive(id)}
                 >
-                    <FaArrowCircleUp/>
+                    <FaArrowCircleUp />
                 </button>
             )}
         </React.Fragment>
     );
 }
+
+ArchiveButton.propTypes = {
+    id: PropTypes.string.isRequired,
+    onArchive: PropTypes.func.isRequired,
+    archived: PropTypes.bool.isRequired,
+};
 
 export default ArchiveButton;

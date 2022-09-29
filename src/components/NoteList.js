@@ -1,7 +1,8 @@
 import React from 'react';
 import NoteItem from './NoteItem';
+import PropTypes from 'prop-types';
 
-function NoteList({ notes, onDelete, onArchive, status }) {
+function NoteList({ notes, onDelete, onArchive }) {
     return (
         <React.Fragment>
             {notes.length > 0 && (
@@ -12,7 +13,6 @@ function NoteList({ notes, onDelete, onArchive, status }) {
                             id={note.id}
                             onDelete={onDelete}
                             onArchive={onArchive}
-                            status={status}
                             {...note}
                         />
                     ))}
@@ -24,5 +24,11 @@ function NoteList({ notes, onDelete, onArchive, status }) {
         </React.Fragment>
     );
 }
+
+NoteList.propTypes = {
+    notes: PropTypes.array.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onArchive: PropTypes.func.isRequired,
+};
 
 export default NoteList;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { FiCheck } from 'react-icons/fi';
+import PropTypes from 'prop-types';
 
 const SubmitButton = ({ onClick }) => {
     return (
@@ -9,6 +10,10 @@ const SubmitButton = ({ onClick }) => {
             </button>
         </React.Fragment>
     );
+};
+
+SubmitButton.propTypes = {
+    onClick: PropTypes.func.isRequired,
 };
 
 export default SubmitButton;

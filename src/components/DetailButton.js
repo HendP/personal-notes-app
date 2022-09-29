@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaEye } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 function DetailButton({ id }) {
     const navigate = useNavigate();
@@ -15,5 +16,9 @@ function DetailButton({ id }) {
         </button>
     );
 }
+
+DetailButton.propTypes = {
+    id: PropTypes.string.isRequired,
+};
 
 export default DetailButton;

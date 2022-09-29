@@ -2,13 +2,10 @@ import React from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
-const AddButton = ({ onInputHandle, onAdd }) => {
+const AddButton = () => {
     return (
         <React.Fragment>
-            <Link
-                to="/add"
-                state={{ onInputHandler: onInputHandle, onAdd: onAdd }}
-            >
+            <Link to="/add">
                 <button className="note-item__add-button">
                     <FiPlus />
                 </button>
