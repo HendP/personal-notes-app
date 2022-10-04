@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FiLogOut } from 'react-icons/fi';
 
-function Navigation() {
+function Navigation({ logout, name }) {
     return (
         <nav className="navigation">
             <ul>
@@ -10,6 +11,12 @@ function Navigation() {
                 </li>
                 <li>
                     <Link to="/archive">Archive Page</Link>
+                </li>
+                <li>
+                    <button onClick={logout} className="button-logout">
+                        {name}
+                        <FiLogOut />
+                    </button>
                 </li>
             </ul>
         </nav>
