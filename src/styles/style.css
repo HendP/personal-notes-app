@@ -249,6 +249,11 @@ main {
   cursor: pointer;
 }
 
+.login-page h2,
+.register-page h2 {
+  font-weight: normal;
+}
+
 .button-logout {
   display: flex;
   align-items: center;
@@ -259,7 +264,6 @@ main {
   cursor: pointer;
   color: var(--on-background);
 }
-
 
 .notes-list {
   display: grid;
@@ -364,7 +368,8 @@ main {
   color: #0b65af;
 }
 
-.page-not-found h2, p{
+.page-not-found h2,
+.page-not-found p {
   text-align: center;
 }
 
