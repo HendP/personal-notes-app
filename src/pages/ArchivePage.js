@@ -1,23 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getArchivedNotes, deleteNote, unarchiveNote } from '../utils/local-data';
+import {
+    getArchivedNotes,
+    deleteNote,
+    unarchiveNote,
+} from '../utils/network-data';
 import AddButton from '../components/AddButton';
 import NoteList from '../components/NoteList';
 import SearchNote from '../components/SearchNote';
+import LoadingComponent from '../components/LoadingComponent';
 
 function ArchivePageWrapper() {
     const [searchParams, setSearchParams] = useSearchParams();
-
+    const [notes, setNotes] = useState([]);
     const keyword = searchParams.get('keyword');
 
     function changeSearchParams(keyword) {
         setSearchParams({ keyword });
     }
 
+    useEffect(() => {
+        async function initialNotes() {
+            const { data } = await getArchivedNotes();
+            setNotes(data);
+        }
+        initialNotes();
+    }, []);
+
     return (
         <ArchiveNotes
             defaultKeyword={keyword}
             keywordChange={changeSearchParams}
+            notes={notes}
         />
     );
 }
@@ -26,31 +40,66 @@ class ArchiveNotes extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            notes: getArchivedNotes(),
+            notes: props.notes,
             keyword: props.defaultKeyword || '',
+            isLoading: false,
+            isLoadingAction: false,
         };
 
         this.onDeleteHandler = this.onDeleteHandler.bind(this);
-        this.onArchiveHandler = this.onUnarchiveHandler.bind(this);
+        this.onUnarchiveHandler = this.onUnarchiveHandler.bind(this);
         this.onKeywordChangeHandler = this.onKeywordChangeHandler.bind(this);
     }
 
-    onDeleteHandler(id) {
-        deleteNote(id);
-
+    async componentDidMount() {
         this.setState(() => {
             return {
-                notes: getArchivedNotes(),
+                isLoading: true,
+            };
+        });
+        const { data } = await getArchivedNotes();
+        this.setState(() => {
+            return {
+                notes: data,
+                isLoading: false,
             };
         });
     }
 
-    onUnarchiveHandler(id) {
+    async onDeleteHandler(id) {
+        deleteNote(id);
+
+        this.setState(() => {
+            return {
+                isLoadingAction: true,
+            };
+        });
+
+        const { data } = await getArchivedNotes();
+
+        this.setState(() => {
+            return {
+                notes: data,
+                isLoadingAction: false,
+            };
+        });
+    }
+
+    async onUnarchiveHandler(id) {
         unarchiveNote(id);
 
         this.setState(() => {
             return {
-                notes: getArchivedNotes(),
+                isLoadingAction: true,
+            };
+        });
+
+        const { data } = await getArchivedNotes();
+
+        this.setState(() => {
+            return {
+                notes: data,
+                isLoadingAction: false,
             };
         });
     }
@@ -74,16 +123,21 @@ class ArchiveNotes extends React.Component {
 
         return (
             <section className="note-app__body">
-                <h1>Active Notes</h1>
+                <h1>Archive Notes</h1>
                 <SearchNote
                     keyword={this.state.keyword}
                     onSearch={this.onKeywordChangeHandler}
                 />
-                <NoteList
-                    notes={notes}
-                    onDelete={this.onDeleteHandler}
-                    onArchive={this.onUnarchiveHandler}
-                />
+                {this.state.isLoading ? (
+                    <LoadingComponent />
+                ) : (
+                    <NoteList
+                        notes={notes}
+                        onDelete={this.onDeleteHandler}
+                        onArchive={this.onUnarchiveHandler}
+                    />
+                )}
+                {this.state.isLoadingAction && <LoadingComponent />}
                 <AddButton />
             </section>
         );

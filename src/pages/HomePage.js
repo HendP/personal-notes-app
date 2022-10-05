@@ -1,21 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getActiveNotes, deleteNote, archiveNote } from '../utils/local-data';
+import { getActiveNotes, deleteNote, archiveNote } from '../utils/network-data';
 import AddButton from '../components/AddButton';
 import NoteList from '../components/NoteList';
 import SearchNote from '../components/SearchNote';
+import LoadingComponent from '../components/LoadingComponent';
 
 function HomePageWrapper() {
     const [searchParams, setSearchParams] = useSearchParams();
-
+    const [notes, setNotes] = useState([]);
     const keyword = searchParams.get('keyword');
 
     function changeSearchParams(keyword) {
         setSearchParams({ keyword });
     }
 
+    useEffect(() => {
+        async function initialNotes() {
+            const { data } = await getActiveNotes();
+            setNotes(data);
+        }
+        initialNotes();
+    }, []);
+
     return (
-        <NotesApp defaultKeyword={keyword} keywordChange={changeSearchParams} />
+        <NotesApp
+            defaultKeyword={keyword}
+            keywordChange={changeSearchParams}
+            notes={notes}
+        />
     );
 }
 
@@ -23,10 +36,10 @@ class NotesApp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            notes: getActiveNotes(),
+            notes: props.notes,
             keyword: props.defaultKeyword || '',
-            title: '',
-            body: '',
+            isLoading: false,
+            isLoadingAction: false,
         };
 
         this.onDeleteHandler = this.onDeleteHandler.bind(this);
@@ -34,22 +47,55 @@ class NotesApp extends React.Component {
         this.onKeywordChangeHandler = this.onKeywordChangeHandler.bind(this);
     }
 
-    onDeleteHandler(id) {
-        deleteNote(id);
-
+    async componentDidMount() {
         this.setState(() => {
             return {
-                notes: getActiveNotes(),
+                isLoading: true,
+            };
+        });
+        const { data } = await getActiveNotes();
+        this.setState(() => {
+            return {
+                notes: data,
+                isLoading: false,
             };
         });
     }
 
-    onArchiveHandler(id) {
+    async onDeleteHandler(id) {
+        deleteNote(id);
+
+        this.setState(() => {
+            return {
+                isLoadingAction: true,
+            };
+        });
+
+        const { data } = await getActiveNotes();
+
+        this.setState(() => {
+            return {
+                notes: data,
+                isLoadingAction: false,
+            };
+        });
+    }
+
+    async onArchiveHandler(id) {
         archiveNote(id);
 
         this.setState(() => {
             return {
-                notes: getActiveNotes(),
+                isLoadingAction: true,
+            };
+        });
+
+        const { data } = await getActiveNotes();
+
+        this.setState(() => {
+            return {
+                notes: data,
+                isLoadingAction: false,
             };
         });
     }
@@ -78,11 +124,16 @@ class NotesApp extends React.Component {
                     keyword={this.state.keyword}
                     onSearch={this.onKeywordChangeHandler}
                 />
-                <NoteList
-                    notes={notes}
-                    onDelete={this.onDeleteHandler}
-                    onArchive={this.onArchiveHandler}
-                />
+                {this.state.isLoading ? (
+                    <LoadingComponent />
+                ) : (
+                    <NoteList
+                        notes={notes}
+                        onDelete={this.onDeleteHandler}
+                        onArchive={this.onArchiveHandler}
+                    />
+                )}
+                {this.state.isLoadingAction && <LoadingComponent />}
                 <AddButton />
             </section>
         );
