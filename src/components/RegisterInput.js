@@ -3,23 +3,23 @@ import PropTypes from 'prop-types';
 import useInput from '../hooks/useInput';
 
 function RegisterInput({ register }) {
-    const [username, onUsernameChange] = useInput('');
+    const [name, onNameChange] = useInput('');
     const [email, onEmailChange] = useInput('');
     const [password, onPasswordChange] = useInput('');
 
     function onSubmitHandler(event) {
         event.preventDefault();
-        register({ name: username, email, password });
+        register({ name: name, email, password });
     }
 
     return (
         <form onSubmit={onSubmitHandler} className="input-register">
-            <label>Username</label>
+            <label>Nama</label>
             <input
                 type="name"
-                placeholder="Masukan usernama anda"
-                value={username}
-                onChange={onUsernameChange}
+                placeholder="Masukan nama anda"
+                value={name}
+                onChange={onNameChange}
             />
             <label>Email</label>
             <input
