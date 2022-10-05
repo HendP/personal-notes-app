@@ -14,8 +14,8 @@ function Navigation({ logout, name }) {
                 </li>
                 <li>
                     <button onClick={logout} className="button-logout">
-                        {name}
                         <FiLogOut />
+                        {name}
                     </button>
                 </li>
             </ul>
