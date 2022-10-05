@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { getUserLogged, putAccessToken } from './utils/network-data';
 import Navigation from './components/Navigation';
@@ -12,6 +12,7 @@ import RegisterPage from './pages/RegisterPage';
 
 function App() {
     const [authedUser, setAuthedUser] = useState(null);
+    const [initializing, setInitializing] = useState(true);
     const [name, setName] = useState('');
 
     function onLogout() {
@@ -22,10 +23,21 @@ function App() {
     async function onLoginSuccess({ accessToken }) {
         putAccessToken(accessToken);
         const { data } = await getUserLogged();
-
         setAuthedUser(data);
         setName(data.name);
     }
+
+    useEffect(() => {
+        async function initialUser() {
+            const { data } = await getUserLogged();
+            setAuthedUser(data);
+            if (data !== null) {
+                setName(data.name);
+            }
+            setInitializing(false);
+        }
+        initialUser();
+    }, []);
 
     const loginComponent = (
         <div className="app-container">
@@ -62,7 +74,15 @@ function App() {
         </div>
     );
 
-    return <>{authedUser === null ? loginComponent : notesComponent}</>;
+    return (
+        <>
+            {authedUser === null && initializing === true
+                ? null
+                : authedUser === null && initializing === false
+                ? loginComponent
+                : notesComponent}
+        </>
+    );
 }
 
 export default App;
