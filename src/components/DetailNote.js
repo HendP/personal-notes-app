@@ -5,42 +5,29 @@ import ArchiveDetailButton from './ArchiveDetailButton';
 import DeleteDetailButton from './DeleteDetailButton';
 import { showFormattedDate } from '../utils/index';
 
-function DetailNote({
-    id,
-    title,
-    body,
-    archived,
-    createdAt,
-    onDelete,
-    onArchive,
-    onUnarchive,
-}) {
+function DetailNote({ note, onDelete, onArchive, onUnarchive }) {
     return (
         <section className="detail-page">
-            <h3 className="detail-page__title">{title}</h3>
+            <h3 className="detail-page__title">{note.title}</h3>
             <p className="detail-page__createdAt">
-                {showFormattedDate(createdAt)}
+                {showFormattedDate(note.createdAt)}
             </p>
-            <div className="detail-page__body">{parser(body)}</div>
+            <div className="detail-page__body">{parser(note.body)}</div>
             <div className="detail-page__action">
                 <ArchiveDetailButton
-                    id={id}
+                    id={note.id}
                     onArchive={onArchive}
                     onUnarchive={onUnarchive}
-                    archived={archived}
+                    archived={note.archived}
                 />
-                <DeleteDetailButton id={id} onDelete={onDelete} />
+                <DeleteDetailButton id={note.id} onDelete={onDelete} />
             </div>
         </section>
     );
 }
 
 DetailNote.propTypes = {
-    id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    body: PropTypes.string.isRequired,
-    archived: PropTypes.bool.isRequired,
-    createdAt: PropTypes.string.isRequired,
+    note: PropTypes.object,
     onDelete: PropTypes.func.isRequired,
     onArchive: PropTypes.func.isRequired,
     onUnarchive: PropTypes.func.isRequired,
