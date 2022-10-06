@@ -143,6 +143,16 @@ main {
   cursor: pointer;
 }
 
+.backToHome a {
+  background-color: transparent;
+  border: 0;
+  color: var(--on-background);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
 .add-new-page__input {
   margin-top: 32px;
 }
