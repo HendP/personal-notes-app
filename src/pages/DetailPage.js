@@ -1,60 +1,83 @@
-import React from 'react';
-import { getNote } from '../utils/local-data';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import DetailNote from '../components/DetailNote';
 import { useNavigate } from 'react-router-dom';
-import { deleteNote, archiveNote, unarchiveNote } from '../utils/local-data';
+import {
+    deleteNote,
+    archiveNote,
+    unarchiveNote,
+    getNote,
+} from '../utils/network-data';
+import { toast } from 'react-toastify';
+import LoadingComponent from '../components/LoadingComponent';
+import DetailNote from '../components/DetailNote';
 
-function DetailPageWrapper() {
+function DetailPage() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [note, setNote] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
-    return <DetailPage id={id} navigate={navigate} />;
-}
-
-class DetailPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            note: getNote(props.id),
-        };
-
-        this.onDeleteHandler = this.onDeleteHandler.bind(this);
-        this.onArchiveHandler = this.onArchiveHandler.bind(this);
-        this.onUnarchiveHandler = this.onUnarchiveHandler.bind(this);
+    async function getDetailNote(id) {
+        setIsLoading(true);
+        const { data } = await getNote(id);
+        console.log(data);
+        setNote(data);
+        setIsLoading(false);
     }
 
-    onDeleteHandler(id) {
-        deleteNote(id);
-        this.props.navigate('/');
+    async function onDeleteHandler(id) {
+        await deleteNote(id)
+            .then(() => {
+                toast.success('Catatan berhasil di hapus', {});
+                navigate('/');
+            })
+            .catch(() => {
+                toast.error('Catatan gagal di hapus', {});
+            });
     }
 
-    onArchiveHandler(id) {
-        archiveNote(id);
-        this.props.navigate('/');
+    async function onArchiveHandler(id) {
+        await archiveNote(id)
+            .then(() => {
+                toast.success('Catatan berhasil di arsipkan', {});
+                navigate('/');
+            })
+            .catch(() => {
+                toast.error('Catatan gagal di arsipkan', {});
+            });
     }
 
-    onUnarchiveHandler(id) {
-        unarchiveNote(id);
-        this.props.navigate('/');
+    async function onUnarchiveHandler(id) {
+        await unarchiveNote(id)
+            .then(() => {
+                toast.success('Catatan berhasil di aktifkan', {});
+                navigate('/');
+            })
+            .catch(() => {
+                toast.error('Catatan gagal di aktifkan', {});
+            });
     }
 
-    render() {
-        if (this.state.note === undefined) {
-            return <p>Note is not found!</p>;
-        }
+    useEffect(() => {
+        getDetailNote(id);
+    }, [id]);
 
-        return (
-            <React.Fragment>
+    return (
+        <>
+            {isLoading ? (
+                <LoadingComponent />
+            ) : Object.keys(note).length === 0 ? (
+                <p>Note is not found!</p>
+            ) : (
                 <DetailNote
-                    {...this.state.note}
-                    onDelete={this.onDeleteHandler}
-                    onArchive={this.onArchiveHandler}
-                    onUnarchive={this.onUnarchiveHandler}
+                    note={note}
+                    onDelete={onDeleteHandler}
+                    onArchive={onArchiveHandler}
+                    onUnarchive={onUnarchiveHandler}
                 />
-            </React.Fragment>
-        );
-    }
+            )}
+        </>
+    );
 }
 
-export default DetailPageWrapper;
+export default DetailPage;
