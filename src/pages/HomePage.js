@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getActiveNotes, deleteNote, archiveNote } from '../utils/network-data';
+import { toast } from 'react-toastify';
 import AddButton from '../components/AddButton';
 import NoteList from '../components/NoteList';
 import SearchNote from '../components/SearchNote';
@@ -63,41 +64,55 @@ class NotesApp extends React.Component {
     }
 
     async onDeleteHandler(id) {
-        deleteNote(id);
+        try {
+            await deleteNote(id);
 
-        this.setState(() => {
-            return {
-                isLoadingAction: true,
-            };
-        });
+            this.setState(() => {
+                return {
+                    isLoadingAction: true,
+                };
+            });
 
-        const { data } = await getActiveNotes();
+            const { data } = await getActiveNotes();
 
-        this.setState(() => {
-            return {
-                notes: data,
-                isLoadingAction: false,
-            };
-        });
+            this.setState(() => {
+                return {
+                    notes: data,
+                    isLoadingAction: false,
+                };
+            });
+
+            toast.success('Catatan berhasil di hapus', {});
+        } catch (error) {
+            console.log(error);
+            toast.error('Catatan gagal di hapus', {});
+        }
     }
 
     async onArchiveHandler(id) {
-        archiveNote(id);
+        try {
+            await archiveNote(id);
 
-        this.setState(() => {
-            return {
-                isLoadingAction: true,
-            };
-        });
+            this.setState(() => {
+                return {
+                    isLoadingAction: true,
+                };
+            });
 
-        const { data } = await getActiveNotes();
+            const { data } = await getActiveNotes();
 
-        this.setState(() => {
-            return {
-                notes: data,
-                isLoadingAction: false,
-            };
-        });
+            this.setState(() => {
+                return {
+                    notes: data,
+                    isLoadingAction: false,
+                };
+            });
+
+            toast.success('Catatan Berhasil di arsipkan', {});
+        } catch (error) {
+            console.log(error);
+            toast.error('Catatan gagal di arsipkan', {});
+        }
     }
 
     onKeywordChangeHandler(keyword) {
