@@ -1,16 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FiLogOut } from 'react-icons/fi';
+import { FiLogOut, FiArchive, FiHome } from 'react-icons/fi';
 
 function Navigation({ logout, name }) {
     return (
         <nav className="navigation">
             <ul>
                 <li>
-                    <Link to="/">Home Page</Link>
+                    <Link to="/">
+                        <FiHome />
+                    </Link>
                 </li>
                 <li>
-                    <Link to="/archive">Archive Page</Link>
+                    <Link to="/archive">
+                        <FiArchive />
+                    </Link>
                 </li>
                 <li>
                     <button onClick={logout} className="button-logout">
