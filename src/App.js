@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { getUserLogged, putAccessToken } from './utils/network-data';
-import { ThemeProvider } from './context/ThemeContext';
+import { NotesProvider } from './context/NotesContext';
+import { FiMoon, FiSun } from 'react-icons/fi';
+import { MdOutlineTranslate } from 'react-icons/md';
 import Navigation from './components/Navigation';
 import HomePage from './pages/HomePage';
 import ArchivePage from './pages/ArchivePage';
@@ -18,6 +20,9 @@ function App() {
     const [theme, setTheme] = useState(
         () => localStorage.getItem('theme') || 'dark'
     );
+    const [locale, setLocale] = useState(
+        () => localStorage.getItem('locale') || 'id'
+    );
 
     function toggleTheme() {
         if (theme === 'dark') {
@@ -28,6 +33,16 @@ function App() {
             setTheme('dark');
             localStorage.setItem('theme', 'dark');
             document.documentElement.setAttribute('data-theme', theme);
+        }
+    }
+
+    function toggleLocale() {
+        if (locale === 'id') {
+            setLocale('en');
+            localStorage.setItem('locale', 'en');
+        } else if (locale === 'en') {
+            setLocale('id');
+            localStorage.setItem('locale', 'id');
         }
     }
 
@@ -57,27 +72,60 @@ function App() {
     }, [theme]);
 
     const loginComponent = (
-        <div className="app-container">
-            <header>
-                <h1>Personal Notes App</h1>
-            </header>
-            <main>
-                <Routes>
-                    <Route
-                        path="/*"
-                        element={<LoginPage loginSuccess={onLoginSuccess} />}
-                    />
-                    <Route path="/register" element={<RegisterPage />} />
-                </Routes>
-            </main>
-        </div>
+        <NotesProvider value={{ theme, toggleTheme, locale, toggleLocale }}>
+            <div className="app-container">
+                <header>
+                    {locale === 'id' ? (
+                        <h1>Aplikasi Catatan Pribadi</h1>
+                    ) : (
+                        <h1>Personal Notes App</h1>
+                    )}
+                    <nav className="navigation">
+                        <ul>
+                            <li>
+                                <button
+                                    onClick={toggleTheme}
+                                    className="button-toggle"
+                                >
+                                    {theme === 'dark' ? <FiSun /> : <FiMoon />}
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    onClick={toggleLocale}
+                                    className="button-toggle"
+                                >
+                                    <MdOutlineTranslate />
+                                    {locale === 'id' ? 'EN' : 'ID'}
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </header>
+                <main>
+                    <Routes>
+                        <Route
+                            path="/*"
+                            element={
+                                <LoginPage loginSuccess={onLoginSuccess} />
+                            }
+                        />
+                        <Route path="/register" element={<RegisterPage />} />
+                    </Routes>
+                </main>
+            </div>
+        </NotesProvider>
     );
 
     const notesComponent = (
-        <ThemeProvider value={{ theme, setTheme, toggleTheme }}>
+        <NotesProvider value={{ theme, toggleTheme, locale, toggleLocale }}>
             <div className="app-container">
                 <header>
-                    <h1>Personal Notes App</h1>
+                    {locale === 'id' ? (
+                        <h1>Aplikasi Catatan Pribadi</h1>
+                    ) : (
+                        <h1>Personal Notes App</h1>
+                    )}
                     <Navigation
                         logout={onLogout}
                         name={name}
@@ -95,7 +143,7 @@ function App() {
                     </Routes>
                 </main>
             </div>
-        </ThemeProvider>
+        </NotesProvider>
     );
 
     return (

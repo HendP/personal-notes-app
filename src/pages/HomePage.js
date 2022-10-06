@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getActiveNotes, deleteNote, archiveNote } from '../utils/network-data';
 import { toast } from 'react-toastify';
+import { NotesConsumer } from '../context/NotesContext';
 import AddButton from '../components/AddButton';
 import NoteList from '../components/NoteList';
 import SearchNote from '../components/SearchNote';
@@ -133,24 +134,33 @@ class NotesApp extends React.Component {
         });
 
         return (
-            <section className="note-app__body">
-                <h1>Active Notes</h1>
-                <SearchNote
-                    keyword={this.state.keyword}
-                    onSearch={this.onKeywordChangeHandler}
-                />
-                {this.state.isLoading ? (
-                    <LoadingComponent />
-                ) : (
-                    <NoteList
-                        notes={notes}
-                        onDelete={this.onDeleteHandler}
-                        onArchive={this.onArchiveHandler}
-                    />
+            <NotesConsumer>
+                {(value) => (
+                    <section className="note-app__body">
+                        {value.locale === 'id' ? (
+                            <h1>Catatan Aktif</h1>
+                        ) : (
+                            <h1>Active Notes</h1>
+                        )}
+
+                        <SearchNote
+                            keyword={this.state.keyword}
+                            onSearch={this.onKeywordChangeHandler}
+                        />
+                        {this.state.isLoading ? (
+                            <LoadingComponent />
+                        ) : (
+                            <NoteList
+                                notes={notes}
+                                onDelete={this.onDeleteHandler}
+                                onArchive={this.onArchiveHandler}
+                            />
+                        )}
+                        {this.state.isLoadingAction && <LoadingComponent />}
+                        <AddButton />
+                    </section>
                 )}
-                {this.state.isLoadingAction && <LoadingComponent />}
-                <AddButton />
-            </section>
+            </NotesConsumer>
         );
     }
 }

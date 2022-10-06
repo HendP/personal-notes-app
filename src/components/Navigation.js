@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiLogOut, FiArchive, FiHome, FiMoon, FiSun } from 'react-icons/fi';
-import { ThemeConsumer } from '../context/ThemeContext';
+import { MdOutlineTranslate } from 'react-icons/md';
+import { NotesConsumer } from '../context/NotesContext';
 
 function Navigation({ logout, name }) {
     return (
-        <ThemeConsumer>
+        <NotesConsumer>
             {(value) => (
                 <nav className="navigation">
                     <ul>
@@ -20,12 +21,24 @@ function Navigation({ logout, name }) {
                             </Link>
                         </li>
                         <li>
-                            <button onClick={value.toggleTheme} className="button-toggle">
+                            <button
+                                onClick={value.toggleTheme}
+                                className="button-toggle"
+                            >
                                 {value.theme === 'dark' ? (
                                     <FiSun />
                                 ) : (
                                     <FiMoon />
                                 )}
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                onClick={value.toggleLocale}
+                                className="button-toggle"
+                            >
+                                <MdOutlineTranslate />
+                                {value.locale === 'id' ? 'EN' : 'ID'}
                             </button>
                         </li>
                         <li>
@@ -37,7 +50,7 @@ function Navigation({ logout, name }) {
                     </ul>
                 </nav>
             )}
-        </ThemeConsumer>
+        </NotesConsumer>
     );
 }
 

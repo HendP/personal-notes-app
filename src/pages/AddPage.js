@@ -4,6 +4,7 @@ import { addNote } from '../utils/network-data';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiArrowLeft } from 'react-icons/fi';
+import { NotesConsumer } from '../context/NotesContext';
 
 function AddPageWrapper() {
     const navigate = useNavigate();
@@ -54,28 +55,40 @@ class AddPage extends React.Component {
 
     render() {
         return (
-            <React.Fragment>
-                <div className="backToHome">
-                    <Link to="/">
-                        <FiArrowLeft />
-                        Kembali
-                    </Link>
-                </div>
-                <div className="add-new-page__input">
-                    <input
-                        className="add-new-page__input__title"
-                        placeholder="Notes title"
-                        onInput={this.onTitleChangeHandler}
-                    />
-                    <div
-                        className="add-new-page__input__body"
-                        data-placeholder="Write you notes here ..."
-                        onInput={this.onBodyChangeHandler}
-                        contentEditable
-                    ></div>
-                    <SubmitButton onClick={this.onSubmitNoteHandler} />
-                </div>
-            </React.Fragment>
+            <NotesConsumer>
+                {(value) => (
+                    <React.Fragment>
+                        <div className="backToHome">
+                            <Link to="/">
+                                <FiArrowLeft />
+                                {value.locale === 'id' ? 'Kembali' : 'Back'}
+                            </Link>
+                        </div>
+                        <div className="add-new-page__input">
+                            <input
+                                className="add-new-page__input__title"
+                                placeholder={
+                                    value.locale === 'id'
+                                        ? 'Judul Catatan'
+                                        : 'Notes Title'
+                                }
+                                onInput={this.onTitleChangeHandler}
+                            />
+                            <div
+                                className="add-new-page__input__body"
+                                data-placeholder={
+                                    value.locale === 'id'
+                                        ? 'Tulis catatanmu disini...'
+                                        : 'Write your notes here...'
+                                }
+                                onInput={this.onBodyChangeHandler}
+                                contentEditable
+                            ></div>
+                            <SubmitButton onClick={this.onSubmitNoteHandler} />
+                        </div>
+                    </React.Fragment>
+                )}
+            </NotesConsumer>
         );
     }
 }

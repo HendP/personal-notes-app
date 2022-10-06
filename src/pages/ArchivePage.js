@@ -6,6 +6,7 @@ import {
     unarchiveNote,
 } from '../utils/network-data';
 import { toast } from 'react-toastify';
+import { NotesConsumer } from '../context/NotesContext';
 import AddButton from '../components/AddButton';
 import NoteList from '../components/NoteList';
 import SearchNote from '../components/SearchNote';
@@ -137,24 +138,32 @@ class ArchiveNotes extends React.Component {
         });
 
         return (
-            <section className="note-app__body">
-                <h1>Archive Notes</h1>
-                <SearchNote
-                    keyword={this.state.keyword}
-                    onSearch={this.onKeywordChangeHandler}
-                />
-                {this.state.isLoading ? (
-                    <LoadingComponent />
-                ) : (
-                    <NoteList
-                        notes={notes}
-                        onDelete={this.onDeleteHandler}
-                        onArchive={this.onUnarchiveHandler}
-                    />
+            <NotesConsumer>
+                {(value) => (
+                    <section className="note-app__body">
+                        {value.locale === 'id' ? (
+                            <h1>Catatan Arsip</h1>
+                        ) : (
+                            <h1>Archive Notes</h1>
+                        )}
+                        <SearchNote
+                            keyword={this.state.keyword}
+                            onSearch={this.onKeywordChangeHandler}
+                        />
+                        {this.state.isLoading ? (
+                            <LoadingComponent />
+                        ) : (
+                            <NoteList
+                                notes={notes}
+                                onDelete={this.onDeleteHandler}
+                                onArchive={this.onUnarchiveHandler}
+                            />
+                        )}
+                        {this.state.isLoadingAction && <LoadingComponent />}
+                        <AddButton />
+                    </section>
                 )}
-                {this.state.isLoadingAction && <LoadingComponent />}
-                <AddButton />
-            </section>
+            </NotesConsumer>
         );
     }
 }

@@ -1,17 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NotesConsumer } from '../context/NotesContext';
 
 function SearchNote({ keyword, onSearch }) {
     return (
-        <input
-            type="search"
-            name="search-bar"
-            id="search-bar"
-            className="search-bar"
-            placeholder="Quick Search by Title"
-            value={keyword}
-            onChange={(e) => onSearch(e.target.value)}
-        />
+        <NotesConsumer>
+            {(value) => (
+                <input
+                    type="search"
+                    name="search-bar"
+                    id="search-bar"
+                    className="search-bar"
+                    placeholder={value.locale === 'id' ? 'Pencarian cepat berdasarkan judul' : 'Quick search by title'}
+                    value={keyword}
+                    onChange={(e) => onSearch(e.target.value)}
+                />
+            )}
+        </NotesConsumer>
     );
 }
 
