@@ -267,7 +267,7 @@ main {
   font-weight: normal;
 }
 
-.button-logout {
+.button-logout, .button-toggle {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -343,7 +343,7 @@ main {
   background-color: #31B0D5;
   font-size: 24px;
   font-weight: bold;
-  color: white;
+  color: var(--on-surface);
   border-radius: 50%;
   border: 0;
   height: 50px;

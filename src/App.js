@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { getUserLogged, putAccessToken } from './utils/network-data';
+import { ThemeProvider } from './context/ThemeContext';
 import Navigation from './components/Navigation';
 import HomePage from './pages/HomePage';
 import ArchivePage from './pages/ArchivePage';
@@ -14,6 +15,21 @@ function App() {
     const [authedUser, setAuthedUser] = useState(null);
     const [initializing, setInitializing] = useState(true);
     const [name, setName] = useState('');
+    const [theme, setTheme] = useState(
+        () => localStorage.getItem('theme') || 'dark'
+    );
+
+    function toggleTheme() {
+        if (theme === 'dark') {
+            setTheme('light');
+            localStorage.setItem('theme', 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        } else if (theme === 'light') {
+            setTheme('dark');
+            localStorage.setItem('theme', 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+    }
 
     function onLogout() {
         setAuthedUser(null);
@@ -36,8 +52,9 @@ function App() {
             }
             setInitializing(false);
         }
+        document.documentElement.setAttribute('data-theme', theme);
         initialUser();
-    }, []);
+    }, [theme]);
 
     const loginComponent = (
         <div className="app-container">
@@ -57,21 +74,28 @@ function App() {
     );
 
     const notesComponent = (
-        <div className="app-container">
-            <header>
-                <h1>Personal Notes App</h1>
-                <Navigation logout={onLogout} name={name} />
-            </header>
-            <main>
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/archive" element={<ArchivePage />} />
-                    <Route path="/add" element={<AddPage />} />
-                    <Route path="/detail/:id" element={<DetailPage />} />
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </main>
-        </div>
+        <ThemeProvider value={{ theme, setTheme, toggleTheme }}>
+            <div className="app-container">
+                <header>
+                    <h1>Personal Notes App</h1>
+                    <Navigation
+                        logout={onLogout}
+                        name={name}
+                        toggleTheme={toggleTheme}
+                        theme={theme}
+                    />
+                </header>
+                <main>
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/archive" element={<ArchivePage />} />
+                        <Route path="/add" element={<AddPage />} />
+                        <Route path="/detail/:id" element={<DetailPage />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </main>
+            </div>
+        </ThemeProvider>
     );
 
     return (
