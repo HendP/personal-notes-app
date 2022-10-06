@@ -1,7 +1,9 @@
 import React from 'react';
 import SubmitButton from '../components/SubmitButton';
-import { addNote } from '../utils/local-data';
-import { useNavigate } from 'react-router-dom';
+import { addNote } from '../utils/network-data';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { FiArrowLeft } from 'react-icons/fi';
 
 function AddPageWrapper() {
     const navigate = useNavigate();
@@ -38,15 +40,27 @@ class AddPage extends React.Component {
         });
     }
 
-    onSubmitNoteHandler(event) {
+    async onSubmitNoteHandler(event) {
         event.preventDefault();
-        addNote(this.state);
-        this.props.navigate('/');
+        try {
+            await addNote(this.state);
+            toast.success('Catatan berhasil ditambahkan', {});
+            this.props.navigate('/');
+        } catch (error) {
+            console.log(error);
+            toast.error('Catatan gagal ditambahkan');
+        }
     }
 
     render() {
         return (
             <React.Fragment>
+                <div className="backToHome">
+                    <Link to="/">
+                        <FiArrowLeft />
+                        Kembali
+                    </Link>
+                </div>
                 <div className="add-new-page__input">
                     <input
                         className="add-new-page__input__title"
